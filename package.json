@@ -1,0 +1,27 @@
+{
+  "name": "wiretap",
+  "version": "0.0.0",
+  "repository": "lukeed/wiretap",
+  "description": "WIP",
+  "unpkg": "dist/index.min.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "lukeed.com"
+  },
+  "scripts": {
+    "build": "rm -rf legacy dist && node bin",
+    "test": "eslint src bin"
+  },
+  "files": [
+    "dist",
+    "legacy"
+  ],
+  "devDependencies": {
+    "bundt": "^0.4.0",
+    "eslint": "^5.16.0"
+  }
+}
