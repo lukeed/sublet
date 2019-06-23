@@ -19,7 +19,6 @@ function debounce(fn) {
 
 export default function (obj, fn) {
 	fn = fn || noop;
-	obj = obj || {};
 
 	var k, real = {};
 	var cb = debounce(fn);

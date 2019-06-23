@@ -20,7 +20,7 @@ function debounce(fn) {
 export default function (obj, fn) {
 	fn = fn || noop;
 	var cb = debounce(fn);
-	var p = new Proxy(obj || {}, {
+	var p = new Proxy(obj, {
 		get: function (o, k) {
 			return o[k];
 		},
