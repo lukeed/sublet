@@ -13,8 +13,9 @@
     "url": "lukeed.com"
   },
   "scripts": {
+    "pretest": "eslint src bin",
     "build": "rm -rf legacy dist && node bin",
-    "test": "eslint src bin"
+    "test": "tape -r esm test/*.js | tap-spec"
   },
   "files": [
     "dist",
@@ -22,6 +23,9 @@
   ],
   "devDependencies": {
     "bundt": "^0.4.0",
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "esm": "^3.2.25",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.10.2"
   }
 }
