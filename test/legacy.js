@@ -348,3 +348,71 @@ test('(legacy) target :: Array', async t => {
 	t.is(src.length, 2, '([idx]) ~> DID update original');
 	t.is(out.length, 2, '([idx]) ~> DID update Copy');
 });
+
+// Note: Does not trigger callback
+test('(legacy) target :: Array :: nested', async t => {
+	t.plan(12);
+
+	let num1 = 0;
+	let src1 = [];
+	let out1 = sublet(src1, () => num1++);
+	t.is(num1, 1, '(1) init complete');
+
+	let num2 = 0;
+	let out2 = sublet(out1, () => num2++);
+	t.is(num2, 1, '(2) init complete');
+
+	await sleep(3);
+	out2.push('hello');
+	await sleep(3);
+
+	t.is(num1, 1, '(1) did NOT trigger callback');
+	t.is(num2, 1, '(2) did NOT trigger callback');
+	t.is(src1.length, 1, '(2 -> 1) ~> DID update original');
+	t.is(out1.length, 1, '(2 -> 1) ~> DID update Proxy');
+	t.is(out2.length, 1, '(2 -> 1) ~> DID update Proxy');
+
+	await sleep(3);
+	out1.push('world');
+	await sleep(3);
+
+	t.is(num1, 1, '(1) did NOT trigger callback');
+	t.is(num2, 1, '(2) did NOT trigger callback');
+	t.is(src1.length, 2, '(1 -> src) ~> DID update original');
+	t.is(out1.length, 2, '(1 -> src) ~> DID update Proxy');
+	t.is(out2.length, 2, '(1 -> src) ~> DID update Proxy');
+});
+
+// Note: Legacy can ONLY track existing keys!
+test('(legacy) target :: Object :: nested', async t => {
+	t.plan(12);
+
+	let num1 = 0;
+	let src1 = { foo:null, bar:null };
+	let out1 = sublet(src1, () => num1++);
+	t.is(num1, 1, '(1) init complete');
+
+	let num2 = 0;
+	let out2 = sublet(out1, () => num2++);
+	t.is(num2, 1, '(2) init complete');
+
+	await sleep(3);
+	out2.foo = 'hello';
+	await sleep(3);
+
+	t.is(num1, 2, '(1) DID trigger callback');
+	t.is(num2, 2, '(2) DID trigger callback');
+	t.is(src1.foo, 'hello', '(2 -> 1) ~> DID update original');
+	t.is(out1.foo, 'hello', '(2 -> 1) ~> DID update Proxy');
+	t.is(out2.foo, 'hello', '(2 -> 1) ~> DID update Proxy');
+
+	await sleep(3);
+	out1.bar = 'world';
+	await sleep(3);
+
+	t.is(num1, 3, '(1) DID trigger callback');
+	t.is(num2, 2, '(2) did NOT trigger callback');
+	t.is(src1.bar, 'world', '(1 -> src) ~> DID update original');
+	t.is(out1.bar, 'world', '(1 -> src) ~> DID update Proxy');
+	t.is(out2.bar, 'world', '(1 -> src) ~> DID update Proxy');
+});
