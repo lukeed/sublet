@@ -9,7 +9,7 @@ function debounce(fn) {
 		timer = setTimeout(function () {
 			fn.apply(ctx, args);
 			timer = null;
-		}, 1);
+		});
 	};
 }
 
