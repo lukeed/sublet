@@ -1,10 +1,6 @@
 // Mode :: "legacy"
 // ---
 
-function noop() {
-	//
-}
-
 function debounce(fn) {
 	var timer;
 	return function () {
@@ -18,8 +14,6 @@ function debounce(fn) {
 }
 
 export default function (obj, fn) {
-	fn = fn || noop;
-
 	var k, real = {};
 	var cb = debounce(fn);
 
