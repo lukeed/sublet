@@ -221,7 +221,7 @@ test('(proxy) operators :: Math', async t => {
 });
 
 test('(proxy) operators :: Array', async t => {
-	t.plan(11);
+	t.plan(14);
 
 	let num = 0;
 	let src = { foo:[] };
@@ -248,6 +248,13 @@ test('(proxy) operators :: Array', async t => {
 	t.is(num, 2, '(concat) DID trigger callback');
 	t.is(src.foo.length, 1, '(concat) ~> DID update original');
 	t.is(out.foo.length, 1, '(concat) ~> DID update Proxy');
+
+	await sleep(3);
+	out.foo[1] = 456;
+	await sleep(3);
+	t.is(num, 2, '([idx]) did NOT trigger callback');
+	t.is(src.foo.length, 2, '([idx]) ~> DID update original');
+	t.is(out.foo.length, 2, '([idx]) ~> DID update Proxy');
 
 	await sleep(3);
 	out.foo = out.foo;
