@@ -289,3 +289,54 @@ test('(proxy) operators :: String', async t => {
 	await sleep(3);
 	t.is(num, 3, '(self) did NOT trigger callback');
 });
+
+test('(proxy) target :: Array', async t => {
+	t.plan(19);
+
+	let num = 0;
+	let src = [];
+	let out = sublet(src, () => num++);
+	t.is(num, 1, 'init complete');
+
+	await sleep(3);
+	out.push(1, 2, 3);
+	await sleep(3);
+	t.is(num, 2, '(push) DID trigger callback');
+	t.is(src.length, 3, '(push) ~> DID update original');
+	t.is(out.length, 3, '(push) ~> DID update Proxy');
+
+	await sleep(3);
+	out.splice(1, 1);
+	await sleep(3);
+	t.is(num, 3, '(splice) DID trigger callback');
+	t.is(src.length, 2, '(splice) ~> DID update original');
+	t.is(out.length, 2, '(splice) ~> DID update Proxy');
+
+	await sleep(3);
+	out.shift();
+	await sleep(3);
+	t.is(num, 4, '(shift) DID trigger callback');
+	t.is(src.length, 1, '(shift) ~> DID update original');
+	t.is(out.length, 1, '(shift) ~> DID update Proxy');
+
+	await sleep(3);
+	out.unshift(5);
+	await sleep(3);
+	t.is(num, 5, '(unshift) DID trigger callback');
+	t.is(src.length, 2, '(unshift) ~> DID update original');
+	t.is(out.length, 2, '(unshift) ~> DID update Proxy');
+
+	await sleep(3);
+	out.pop();
+	await sleep(3);
+	t.is(num, 6, '(pop) DID trigger callback');
+	t.is(src.length, 1, '(pop) ~> DID update original');
+	t.is(out.length, 1, '(pop) ~> DID update Proxy');
+
+	await sleep(3);
+	out[1] = 12345;
+	await sleep(3);
+	t.is(num, 7, '([idx]) DID trigger callback');
+	t.is(src.length, 2, '([idx]) ~> DID update original');
+	t.is(out.length, 2, '([idx]) ~> DID update Proxy');
+});
