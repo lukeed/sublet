@@ -1,6 +1,6 @@
 {
   "name": "sublet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "lukeed/sublet",
   "description": "WIP",
   "unpkg": "dist/index.min.js",
