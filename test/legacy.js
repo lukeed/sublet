@@ -110,14 +110,13 @@ test('(legacy) repeat value', async t => {
 	t.is(num, 1, 'did not re-run callback!');
 });
 
-/**
- * Legacy fails because can only track existing keys!
- *
+// Note: Legacy can ONLY track existing keys!
 test('(legacy) async mutation', t => {
 	t.plan(5);
 
 	let num = 0;
-	let out = sublet({}, arg => {
+	let src = { foo:0, bar:0 };
+	let out = sublet(src, arg => {
 		num++;
 		if (arg.foo) {
 			t.is(num, 2, 're-ran callback');
@@ -125,24 +124,26 @@ test('(legacy) async mutation', t => {
 			setTimeout(() => {
 				out.bar = 456;
 				out.foo = false;
-			}, 10); // via external
+			}, 100); // via external
 		} else if (arg.bar) {
 			t.is(num, 3, 're-ran callback');
 			t.is(arg.bar, 456, '~> added "bar" after timeout!');
 		} else {
 			// Runs on init
-			setTimeout(() => arg.foo = 123, 10);
+			setTimeout(() => arg.foo = 123, 100);
 		}
 	});
 
 	t.is(num, 1, 'init complete');
 });
 
+// Note: Legacy can ONLY track existing keys!
 test('(legacy) async callback', t => {
 	t.plan(3);
 
 	let num = 0;
-	let out = sublet({}, async arg => {
+	let src = { foo:0 };
+	let out = sublet(src, async arg => {
 		num++;
 		if (arg.foo) {
 			t.is(num, 2, 're-ran callback');
@@ -156,10 +157,8 @@ test('(legacy) async callback', t => {
 
 	t.is(num, 1, 'init complete');
 });
- *
- */
 
-// Note: Legacy DOES respond to `src` changes
+// Note: Legacy DOES trigger with `src` changes
 test('(legacy) original mutation', async t => {
 	t.plan(4);
 
