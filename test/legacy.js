@@ -42,11 +42,12 @@ test('(legacy) setup', t => {
 	t.is(num, 1, '(done) ran callback immediately');
 });
 
+// Note: Legacy can ONLY track existing keys!
 test('(legacy) effects', t => {
 	t.plan(3);
 
 	let num = 0;
-	let src = {};
+	let src = { foo:0 };
 	let out = sublet(src, arg => {
 		arg.foo = 123;
 		num++;
@@ -57,31 +58,33 @@ test('(legacy) effects', t => {
 	t.is(src.foo, 123, '~> original received value');
 });
 
+// Note: Legacy can ONLY track existing keys!
 test('(legacy) defers', async t => {
-	t.plan(12);
+	t.plan(13);
 
 	let num = 0;
-	let src = { a:1 };
+	let src = { a:1, b:0, c:0, foo:0, foobar:0 };
 	let out = sublet(src, () => ++num);
+	t.is(num, 1, 'init complete');
 
+	await sleep(3);
 	src.foo = 123;
 	out.foobar = 456;
+	await sleep(3);
 
-	t.is(num, 1, 'init complete');
+	t.is(num, 2, 'callback re-ran once');
 	t.is(out.foo, 123, '~> Copy has `foo` key');
 	t.is(out.foobar, 456, '~> Copy has `foobar` key');
 	t.is(src.foo, 123, '~> original has `foo` key');
 	t.is(src.foobar, 456, '~> original has `foobar` key');
 
 	await sleep(3);
-
 	out.a = 2;
 	out.b = 3;
 	out.c = 4;
-
 	await sleep(3);
 
-	t.is(num, 2, 'callback re-ran once');
+	t.is(num, 3, 'callback re-ran once');
 
 	t.is(out.a, 2, '~> Copy received `a` value');
 	t.is(out.b, 3, '~> Copy received `b` value');
@@ -158,7 +161,6 @@ test('(legacy) async callback', t => {
 	t.is(num, 1, 'init complete');
 });
 
-// Note: Legacy DOES trigger with `src` changes
 test('(legacy) original mutation', async t => {
 	t.plan(4);
 
@@ -171,7 +173,7 @@ test('(legacy) original mutation', async t => {
 	src.a = 10;
 	await sleep(3);
 
-	t.is(num, 2, 'DID re-run callback!');
+	t.is(num, 1, 'did NOT re-run callback!');
 	t.is(src.a, 10, '~> updated original');
 	t.is(out.a, 10, '~> updated Copy');
 });
@@ -297,7 +299,8 @@ test('(legacy) operators :: String', async t => {
 	t.is(num, 3, '(self) did NOT trigger callback');
 });
 
-// Note: Does not trigger callback
+// Note: Does not trigger callback!
+// Note: Returns original Array, can't proxy
 test('(legacy) target :: Array', async t => {
 	t.plan(19);
 

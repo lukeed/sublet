@@ -13,16 +13,16 @@ function debounce(fn) {
 	};
 }
 
-function handler(fn, key, real, obj) {
-	real[key] = obj[key];
-	Object.defineProperty(obj, key, {
+function handler(fn, key, shim, obj) {
+	Object.defineProperty(shim, key, {
+		enumerable: true,
 		get: function () {
-			return real[key];
+			return obj[key];
 		},
 		set: function (v) {
-			if (real[key] !== v) {
-				real[key] = v;
-				fn(obj);
+			if (obj[key] !== v) {
+				obj[key] = v;
+				fn(shim);
 			}
 			return v;
 		}
@@ -30,9 +30,14 @@ function handler(fn, key, real, obj) {
 }
 
 export default function (obj, fn) {
-	var k, real={};
-	var run = handler.bind(fn, debounce(fn));
-	for (k in obj) run(k, real, obj);
-	fn(obj);
-	return obj;
+	var k, shim={}, cb = debounce(fn);
+	if (Array.isArray(obj)) {
+		shim = obj;
+	} else {
+		for (k in obj) {
+			handler(cb, k, shim, obj);
+		}
+	}
+	fn(shim);
+	return shim;
 }
