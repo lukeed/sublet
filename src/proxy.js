@@ -22,7 +22,7 @@ export default function (obj, fn) {
 		set: function (o, k, v) {
 			if (o[k] !== v) {
 				o[k] = v;
-				cb(p);
+				cb(o);
 			}
 			return true;
 		}

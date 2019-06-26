@@ -22,7 +22,7 @@ function handler(fn, key, shim, obj) {
 		set: function (v) {
 			if (obj[key] !== v) {
 				obj[key] = v;
-				fn(shim);
+				fn(obj);
 			}
 			return v;
 		}
