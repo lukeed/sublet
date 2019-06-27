@@ -1,4 +1,4 @@
-# sublet [![Build Status](https://badgen.now.sh/travis/lukeed/sublet)](https://travis-ci.org/lukeed/sublet)
+# sublet [![Build Status](https://badgen.net/travis/lukeed/sublet)](https://travis-ci.org/lukeed/sublet)
 
 > Reactive leases for data subscriptions
 
