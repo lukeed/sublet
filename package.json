@@ -2,7 +2,7 @@
   "name": "sublet",
   "version": "0.0.2",
   "repository": "lukeed/sublet",
-  "description": "WIP",
+  "description": "Reactive leases for data subscriptions",
   "unpkg": "dist/index.min.js",
   "module": "dist/index.mjs",
   "main": "dist/index.js",
@@ -20,6 +20,12 @@
   "files": [
     "dist",
     "legacy"
+  ],
+  "keywords": [
+    "proxy",
+    "reactive",
+    "subscriber",
+    "state"
   ],
   "devDependencies": {
     "bundt": "^0.4.0",
